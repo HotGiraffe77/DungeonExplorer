@@ -6,6 +6,10 @@ using System.Media;
 
 namespace DungeonExplorer
 {
+    /// <summary>
+    /// Contains all the logic for the game to run.
+    /// This class has a method with the main game loop inside.
+    /// </summary>
     internal class Game
     {
         // Private sets.
@@ -21,7 +25,7 @@ namespace DungeonExplorer
 
         }
 
-        /// Method to start the main game loop.
+        // Method to start the main game loop.
         public void Start()
         {
 

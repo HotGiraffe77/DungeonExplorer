@@ -5,12 +5,16 @@ using System.Security.Policy;
 
 namespace DungeonExplorer
 {
+    /// <summary>
+    /// Tests various aspects of the program
+    /// Contains a method that uses debug.assert() to run tests.
+    /// </summary>
     internal class Test
     {
         public Player TestPlayer { get; private set; }
         public Room TestRoom { get; private set; }
 
-        /// Tests various parts of the program.
+        // Contains the tests that are run at the start of the program.
         public void RunTests()
         {
             Console.WriteLine("Running tests...");

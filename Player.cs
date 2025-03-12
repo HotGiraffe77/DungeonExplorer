@@ -4,6 +4,11 @@ using System.Runtime.Remoting.Metadata;
 
 namespace DungeonExplorer
 {
+    ///<summary>
+    /// Creates the player that representst he user
+    /// The player class has methods for inventory intercation and username aquisition
+    /// </summary>
+
     public class Player
     {
         // Public properties with private setters.
@@ -14,7 +19,7 @@ namespace DungeonExplorer
         // Fully private property.
         private List<string> inventory = new List<string>();
 
-        /// Constructor initialises the players name.
+        // Constructor initialises the players name and health.
         public Player(string name, int health) 
         {
             Name = name;
@@ -22,7 +27,7 @@ namespace DungeonExplorer
         }
 
         
-        /// Method to get the users name.
+        // Method to get the users name.
         public string GetName()
         {
             Console.WriteLine("Please enter a username: ");
@@ -35,7 +40,7 @@ namespace DungeonExplorer
         }
 
 
-        /// Method to pick up the item in the current room.
+        // Method to pick up the item in the current room.
         public void PickUpItem(string item)
         {
             Console.WriteLine($"{item} picked up!");
@@ -44,7 +49,7 @@ namespace DungeonExplorer
         }
 
 
-        /// Method to Show the contents of the inventory.
+        // Method to Show the contents of the inventory.
         public string InventoryContents()
         {
             // Checks if the inventory is empty or not

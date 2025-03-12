@@ -5,6 +5,10 @@ using System.Runtime.CompilerServices;
 
 namespace DungeonExplorer
 {
+    /// <summary>
+    /// Creates the rooms that the user will be moving through.
+    /// The class has methods for getting random items and descriptions.
+    /// </summary>
     public class Room
     {
         private List<string> RoomDescriptions;
@@ -12,7 +16,7 @@ namespace DungeonExplorer
         private Random rand;
 
 
-        /// Constructor initialises with room descriptions, items, and random.
+        // Constructor initialises with room descriptions, items, and random.
         public Room()
         {
             // List of room descriptions.
@@ -31,28 +35,28 @@ namespace DungeonExplorer
 
         }
 
-        /// Getter and setter for the room description list.
+        // Getter and setter for the room description list.
         public List<string> RoomDescriptionList
         {
             get { return RoomDescriptions; }
             private set { RoomDescriptions = value; }
         }
 
-        /// Getter and setter for the item list.
+        // Getter and setter for the item list.
         public List<string> ItemList
         {
             get { return Items; }
             private set { Items = value; }
         }
 
-        /// Method to get a random room descriptions.
+        // Method to get a random room descriptions.
         public string GetDescription()
         {
 
             return RoomDescriptions[rand.Next(RoomDescriptions.Count)];
         }
 
-        /// Method to get a random item.
+        // Method to get a random item.
         public string GetItems()
         {
             return Items[rand.Next(Items.Count)];
