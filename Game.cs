@@ -18,11 +18,13 @@ namespace DungeonExplorer
         {
             currentRoom = new Room();
             player = new Player("Username", 10);
+
         }
 
         /// Method to start the main game loop.
         public void Start()
         {
+
             bool playing = true;
             while (playing)
             {
@@ -91,7 +93,6 @@ namespace DungeonExplorer
                     "\nPress any key to end the game...");
                 Console.ReadKey();
                 playing = false;
-
             }
         }
     }
