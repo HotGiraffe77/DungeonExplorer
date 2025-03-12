@@ -47,7 +47,7 @@ namespace DungeonExplorer
                     string item = currentRoom.GetItems();
                     // Gets the users input to continue.
                     Console.WriteLine($"\nIn the room there is a {item}." +
-                        " Press Space to pick it up, I to check your inventory, or Enter to carry on...");
+                        " Press Space to pick it up, I to check your inventory, or Enter to enter the next room...");
                     ConsoleKey PickupInput;
                     PickupInput = Console.ReadKey(true).Key;
 
@@ -59,13 +59,15 @@ namespace DungeonExplorer
                         {
                             // Adds the item to the inventory list. (Calls PickUpItem())
                             player.PickUpItem(item);
+                            Console.WriteLine("Press any key to enter the next room...");
+                            PickupInput = Console.ReadKey(true).Key;
                             condition = false;
                         }
                         else if (PickupInput == ConsoleKey.I)
                         {
                             // Displays the contents of the inventory. (calls InventoryContents())
                             Console.WriteLine($"Your inventory currently has: {player.InventoryContents()}");
-                            Console.WriteLine($"Press Space to pick up {item}, or Enter to continue");
+                            Console.WriteLine($"Press Space to pick up {item}, or Enter to enter the next room...");
                             PickupInput = Console.ReadKey(true).Key;
                         }
                         else if (PickupInput == ConsoleKey.Enter)
@@ -76,7 +78,7 @@ namespace DungeonExplorer
                         else
                         {
                             // Ensures the input was valid.
-                            Console.WriteLine("Please enter Space to pick up or Enter to continue");
+                            Console.WriteLine("Please enter Space to pick up or Enter to enter the next room...");
                         }
                     }
                     TurnCount -= 1;
