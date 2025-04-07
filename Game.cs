@@ -16,11 +16,13 @@ namespace DungeonExplorer
         public Player player { get; private set; }
         public Room currentRoom { get; private set; }
         public Test testing = new Test();
+        public GameMap map { get; private set; }
         public string Username { get; private set; }
 
         public Game()
         {
             currentRoom = new Room();
+            map = new GameMap();
             player = new Player("Username", 10);
 
         }
@@ -49,10 +51,12 @@ namespace DungeonExplorer
                 while (TurnCount > 0)
                 {
                     // Gets the description and item for the room.(Calls GetDescription() and GetItems())
-                    Console.WriteLine(currentRoom.GetDescription());
-                    string item = currentRoom.GetItems();
+                    string _room = currentRoom.GetDescription();
+                    string _item = currentRoom.GetItems();
+                    map.SaveRoom(_room, _item);
+                    Console.WriteLine(_room);
                     // Gets the users input to continue.
-                    Console.WriteLine($"\nIn the room there is a {item}." +
+                    Console.WriteLine($"\nIn the room there is a {_item}." +
                         " Press Space to pick it up, I to check your inventory, or Enter to enter the next room...");
                     ConsoleKey PickupInput;
                     PickupInput = Console.ReadKey(true).Key;
@@ -64,7 +68,7 @@ namespace DungeonExplorer
                         if (PickupInput == ConsoleKey.Spacebar)
                         {
                             // Adds the item to the inventory list. (Calls PickUpItem())
-                            player.PickUpItem(item);
+                            player.PickUpItem(_item);
                             Console.WriteLine("Press any key to enter the next room...");
                             PickupInput = Console.ReadKey(true).Key;
                             condition = false;
@@ -73,8 +77,13 @@ namespace DungeonExplorer
                         {
                             // Displays the contents of the inventory. (calls InventoryContents())
                             Console.WriteLine($"Your inventory currently has: {player.InventoryContents()}");
-                            Console.WriteLine($"Press Space to pick up {item}, or Enter to enter the next room...");
+                            Console.WriteLine($"Press Space to pick up {_item}, or Enter to enter the next room...");
                             PickupInput = Console.ReadKey(true).Key;
+                        }
+                        else if (PickupInput == ConsoleKey.M)
+                        {
+                            map.PrintRooms();
+                            condition = false;
                         }
                         else if (PickupInput == ConsoleKey.Enter)
                         {
