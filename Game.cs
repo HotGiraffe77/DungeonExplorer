@@ -14,16 +14,17 @@ namespace DungeonExplorer
     {
         // Private sets.
         public Player player { get; private set; }
+        public Monster monster { get; private set; }
         public Room currentRoom { get; private set; }
         public Test testing = new Test();
         public GameMap map { get; private set; }
+        public Inventory inventory { get; private set; }
         public string Username { get; private set; }
 
         public Game()
         {
             currentRoom = new Room();
             map = new GameMap();
-            player = new Player("Username", 10);
 
         }
 
@@ -36,8 +37,14 @@ namespace DungeonExplorer
             {
                 testing.RunTests();
                 // Gets the users name.(Calls GetName())
-                Username = player.GetName();
-                Console.WriteLine($"Hello, {Username}!");
+                Console.WriteLine("Please enter a username: ");
+                string username = Console.ReadLine();
+                if (string.IsNullOrEmpty(username))
+                {
+                    username = "Blank";
+                }
+                Console.WriteLine($"Hello, {username}!");
+                player = new Player(username, 10, 5);
                 ConsoleKey Key;
                 do
                 {
@@ -53,10 +60,12 @@ namespace DungeonExplorer
                     // Gets the description and item for the room.(Calls GetDescription() and GetItems())
                     string _room = currentRoom.GetDescription();
                     string _item = currentRoom.GetItems();
+                    string _monstername = currentRoom.GetMonsterName();
+                    monster = new Monster(_monstername, 10, 2);
                     map.SaveRoom(_room, _item);
                     Console.WriteLine(_room);
                     // Gets the users input to continue.
-                    Console.WriteLine($"In the room there is a {_item}.");
+                    Console.WriteLine($"In the room there is a {_monstername} guarding {_item}.");
                     // Loops until the user enters a valid input.
                     bool condition = true;
                     while (condition == true)
@@ -68,7 +77,7 @@ namespace DungeonExplorer
                         if (PickupInput == ConsoleKey.Spacebar)
                         {
                             // Adds the item to the inventory list. (Calls PickUpItem())
-                            player.PickUpItem(_item);
+                            inventory.PickUpItem(_item);
                             Console.WriteLine("Press any key to enter the next room...");
                             PickupInput = Console.ReadKey(true).Key;
                             condition = false;
@@ -76,7 +85,7 @@ namespace DungeonExplorer
                         else if (PickupInput == ConsoleKey.I)
                         {
                             // Displays the contents of the inventory. (calls InventoryContents())
-                            Console.WriteLine($"Your inventory currently has: {player.InventoryContents()}");
+                            Console.WriteLine($"Your inventory currently has: {inventory.InventoryContents()}");
                             Console.WriteLine($"Press Space to pick up {_item}, or Enter to enter the next room...");
                             PickupInput = Console.ReadKey(true).Key;
                         }
@@ -99,7 +108,7 @@ namespace DungeonExplorer
 
                 // Displays the inventory before ending the game.
                 Console.WriteLine("\nYou made it through the dungeon! Thanks for playing." +
-                    $"\nIn the end you collected: {player.InventoryContents()}" +
+                    $"\nIn the end you collected: {inventory.InventoryContents()}" +
                     "\nPress any key to end the game...");
                 Console.ReadKey();
                 playing = false;

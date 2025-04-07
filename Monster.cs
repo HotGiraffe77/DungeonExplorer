@@ -8,9 +8,13 @@ namespace DungeonExplorer
 {
     public class Monster : Creature
     {
-        public Monster(string name, int health, int damage)
-            : base(name,health, damage) { }
 
+
+        public Monster(string name, int health, int damage)
+            : base(name,health, damage)
+        {
+
+        }
 
         public override void Attack(Creature target)
         {
