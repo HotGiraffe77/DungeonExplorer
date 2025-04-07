@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace DungeonExplorer
 {
-    internal class Monster
+    public class Monster : Creature
     {
+        public Monster(string name, int health, int damage)
+            : base(name,health, damage) { }
+
+
+        public override void Attack(Creature target)
+        {
+            int damage = Damage;
+            Console.WriteLine($"{Name} attacks {target.Name} for {damage} damage. ");
+            target.Hit(damage);
+        }
     }
 }
