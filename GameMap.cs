@@ -22,9 +22,36 @@ namespace DungeonExplorer
 
         }
 
-        public void PrintRooms()
+        public string PrintRooms()
         {
             Console.WriteLine($"You have visited {SavedRooms.Count()} rooms.");
+            if (SavedRooms.Count() >1)
+            {
+                while (true)
+                {
+                    Console.WriteLine("Would you like to go back to the previous room?");
+                    string input = Console.ReadLine().Trim();
+                    if (input.Equals("Y", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var row = SavedRooms[SavedRooms.Count() - 2];
+                        var room = row[row.Count() - 2];
+                        var item = row[row.Count() - 1];
+                        Console.WriteLine(room);
+                        return item;
+                    }
+                    else if (input.Equals("N", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return null;
+                    }
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+
+            
             
         }
     }

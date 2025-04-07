@@ -56,15 +56,15 @@ namespace DungeonExplorer
                     map.SaveRoom(_room, _item);
                     Console.WriteLine(_room);
                     // Gets the users input to continue.
-                    Console.WriteLine($"\nIn the room there is a {_item}." +
-                        " Press Space to pick it up, I to check your inventory, or Enter to enter the next room...");
-                    ConsoleKey PickupInput;
-                    PickupInput = Console.ReadKey(true).Key;
-
+                    Console.WriteLine($"In the room there is a {_item}.");
                     // Loops until the user enters a valid input.
                     bool condition = true;
                     while (condition == true)
                     {
+                        Console.WriteLine(" Press Space to pick it up, I to check your inventory, M to check your map, or E to enter the next room...");
+                        ConsoleKey PickupInput;
+                        PickupInput = Console.ReadKey(true).Key;
+
                         if (PickupInput == ConsoleKey.Spacebar)
                         {
                             // Adds the item to the inventory list. (Calls PickUpItem())
@@ -82,18 +82,15 @@ namespace DungeonExplorer
                         }
                         else if (PickupInput == ConsoleKey.M)
                         {
-                            map.PrintRooms();
-                            condition = false;
+                            _item = map.PrintRooms();
+                            Console.WriteLine($"In the room there is a {_item}");
+                            PickupInput = Console.ReadKey(true).Key;
+                            
                         }
-                        else if (PickupInput == ConsoleKey.Enter)
+                        else if (PickupInput == ConsoleKey.E)
                         {
                             // Continues the game.
                             condition = false;
-                        }
-                        else
-                        {
-                            // Ensures the input was valid.
-                            Console.WriteLine("Please enter Space to pick up or Enter to enter the next room...");
                         }
                     }
                     TurnCount -= 1;
