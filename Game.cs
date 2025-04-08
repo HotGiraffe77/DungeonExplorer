@@ -14,6 +14,7 @@ namespace DungeonExplorer
     {
         // Private sets.
         public Player player { get; private set; }
+        public MonsterMaker monsterType { get; private set; }
         public Monster monster { get; private set; }
         public Room currentRoom { get; private set; }
         public Test testing = new Test();
@@ -25,6 +26,8 @@ namespace DungeonExplorer
         {
             currentRoom = new Room();
             map = new GameMap();
+            inventory = new Inventory();
+            monsterType = new MonsterMaker();
 
         }
 
@@ -44,7 +47,7 @@ namespace DungeonExplorer
                     username = "Blank";
                 }
                 Console.WriteLine($"Hello, {username}!");
-                player = new Player(username, 10, 5);
+
                 ConsoleKey Key;
                 do
                 {
@@ -54,27 +57,52 @@ namespace DungeonExplorer
                 while (Key != ConsoleKey.Enter);
 
                 // The player has 6 turns to go through the dungeon.
+                player = new Player(username, 100, 15);
                 int TurnCount = 6;
                 while (TurnCount > 0)
                 {
                     // Gets the description and item for the room.(Calls GetDescription() and GetItems())
                     string _room = currentRoom.GetDescription();
                     string _item = currentRoom.GetItems();
-                    string _monstername = currentRoom.GetMonsterName();
-                    monster = new Monster(_monstername, 10, 2);
+
+                    monster = monsterType.CreateMonster();
                     map.SaveRoom(_room, _item);
                     Console.WriteLine(_room);
-                    // Gets the users input to continue.
-                    Console.WriteLine($"In the room there is a {_monstername} guarding {_item}.");
-                    // Loops until the user enters a valid input.
+                    Console.WriteLine($"In the room there is a {monster.Name} guarding a chest.");
+                    monster.Speak();
+                    while (monster.IsAlive && player.IsAlive)
+                    {
+                        Console.WriteLine($"Press any key to attack the {monster.Name}.");
+                        Console.ReadKey();
+                        player.Attack(monster);
+                        if (monster.IsAlive)
+                        {
+                            monster.Attack(player);
+                        }
+                    }
+                    if (!player.IsAlive)
+                    {
+                        Console.WriteLine("You were defeated...");
+                        playing = false;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You defeated the monster.");
+
+                    }
+                    Console.WriteLine($"The chest the monster was guarding contains a {_item}");
+
+
+
                     bool condition = true;
                     while (condition == true)
                     {
-                        Console.WriteLine(" Press Space to pick it up, I to check your inventory, M to check your map, or E to enter the next room...");
+                        Console.WriteLine(" Press P to pick it up, I to check your inventory, M to check your map, or E to enter the next room...");
                         ConsoleKey PickupInput;
                         PickupInput = Console.ReadKey(true).Key;
 
-                        if (PickupInput == ConsoleKey.Spacebar)
+                        if (PickupInput == ConsoleKey.P)
                         {
                             // Adds the item to the inventory list. (Calls PickUpItem())
                             inventory.PickUpItem(_item);
@@ -92,7 +120,6 @@ namespace DungeonExplorer
                         else if (PickupInput == ConsoleKey.M)
                         {
                             _item = map.PrintRooms();
-                            Console.WriteLine($"In the room there is a {_item}");
                             PickupInput = Console.ReadKey(true).Key;
                             
                         }
@@ -107,9 +134,19 @@ namespace DungeonExplorer
                 }
 
                 // Displays the inventory before ending the game.
-                Console.WriteLine("\nYou made it through the dungeon! Thanks for playing." +
+                if (playing)
+                {
+                    Console.WriteLine("\nYou made it through the dungeon! Thanks for playing." +
                     $"\nIn the end you collected: {inventory.InventoryContents()}" +
                     "\nPress any key to end the game...");
+
+                }
+                else
+                {
+                    Console.WriteLine("Thanks for playing!"+
+                    $"\nIn the end you collected: {inventory.InventoryContents()}" +
+                    "\nPress any key to end the game...");
+                }
                 Console.ReadKey();
                 playing = false;
             }

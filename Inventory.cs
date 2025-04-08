@@ -23,7 +23,7 @@ namespace DungeonExplorer
         {
             Console.WriteLine($"{item} picked up!");
             NewItem = item;
-            inventory.Add(item);
+            inventory.Add(NewItem);
         }
 
 

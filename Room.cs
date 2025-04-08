@@ -14,7 +14,6 @@ namespace DungeonExplorer
         private List<string> RoomDescriptions;
         private List<string> Items;
         private Random rand;
-        private List<string> MonsterNames;
 
 
         // Constructor initialises with room descriptions, items, and random.
@@ -32,9 +31,6 @@ namespace DungeonExplorer
             // List of items.
             Items = new List<string> { "Apple", "Rusted Sword", "Health Potion", "Broken Jar", "Dice", "Damp Cloth" };
             
-            MonsterNames = new List<string>{"Serpent", "Griffin", "Wolf", "Witch", "Dragon", "Goblin" };
- 
-
             rand = new Random();
 
         }
@@ -53,11 +49,7 @@ namespace DungeonExplorer
             private set { Items = value; }
         }
 
-        public List<string> MonsterNamesList
-        {
-            get { return  MonsterNames; }
-            private set { MonsterNames = value; }
-        }
+
 
         // Method to get a random room descriptions.
         public string GetDescription()
@@ -72,9 +64,6 @@ namespace DungeonExplorer
             return Items[rand.Next(Items.Count)];
         }
 
-        public string GetMonsterName()
-        {
-            return MonsterNames[rand.Next(MonsterNames.Count)];
-        }
+
     }
 }

@@ -37,6 +37,7 @@ namespace DungeonExplorer
                         var room = row[row.Count() - 2];
                         var item = row[row.Count() - 1];
                         Console.WriteLine(room);
+                        Console.WriteLine($"In the room there chest containing a {item}");
                         return item;
                     }
                     else if (input.Equals("N", StringComparison.OrdinalIgnoreCase))

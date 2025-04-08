@@ -25,9 +25,15 @@ namespace DungeonExplorer
         public void Hit(int amount)
         {
             Health -= amount;
-            Console.WriteLine($"{Name} takes {amount} damage. Health is now {Health}.");
+            Console.WriteLine($"{Name}'s health is now {Health}.");
         }
 
         public abstract void Attack(Creature target);
+
+    }
+
+    public interface IMonsterSound
+    {
+        void Speak();
     }
 }

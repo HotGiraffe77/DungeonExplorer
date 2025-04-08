@@ -44,11 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Creature.cs" />
+    <Compile Include="Dragon.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameMap.cs" />
+    <Compile Include="Goblin.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Monster.cs" />
+    <Compile Include="MonsterMaker.cs" />
+    <Compile Include="Orc.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

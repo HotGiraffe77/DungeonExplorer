@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DungeonExplorer
 {
-    public class Monster : Creature
+    public class Monster : Creature, IMonsterSound
     {
 
 
@@ -18,9 +18,14 @@ namespace DungeonExplorer
 
         public override void Attack(Creature target)
         {
-            int damage = Damage;
+            int damage = new Random().Next(1,Damage + 1);
             Console.WriteLine($"{Name} attacks {target.Name} for {damage} damage. ");
             target.Hit(damage);
+        }
+
+        public virtual void Speak()
+        {
+            Console.WriteLine($"The {Name} growls menacingly...");
         }
     }
 }

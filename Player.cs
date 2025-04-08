@@ -20,7 +20,7 @@ namespace DungeonExplorer
         public override void Attack(Creature target)
         {
             int dmg = Damage;
-            Console.WriteLine($"{Name} attacks {target.Name} for {dmg} damage. ");
+            Console.WriteLine($"You attack {target.Name} for {dmg} damage. ");
             target.Hit(dmg);
         }
     }
