@@ -50,6 +50,7 @@
     <Compile Include="Goblin.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Junk.cs" />
     <Compile Include="Monster.cs" />
     <Compile Include="MonsterMaker.cs" />
     <Compile Include="Orc.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Test.cs" />
+    <Compile Include="Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

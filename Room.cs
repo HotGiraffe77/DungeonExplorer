@@ -12,7 +12,6 @@ namespace DungeonExplorer
     public class Room
     {
         private List<string> RoomDescriptions;
-        private List<string> Items;
         private Random rand;
 
 
@@ -28,8 +27,6 @@ namespace DungeonExplorer
             "\nThe floor squelches with every step as thick slime coats the stone floors. Occasional bubbles rise and pop. The walls ooze with the same sticky substance",
             "\nThis vast, domed chamber seems unnaturally large. Shadows flicker abnormally. In the center of the room, a pedestal holds a cracked hourglass" };
 
-            // List of items.
-            Items = new List<string> { "Apple", "Rusted Sword", "Health Potion", "Broken Jar", "Dice", "Damp Cloth" };
             
             rand = new Random();
 
@@ -42,15 +39,6 @@ namespace DungeonExplorer
             private set { RoomDescriptions = value; }
         }
 
-        // Getter and setter for the item list.
-        public List<string> ItemList
-        {
-            get { return Items; }
-            private set { Items = value; }
-        }
-
-
-
         // Method to get a random room descriptions.
         public string GetDescription()
         {
@@ -58,11 +46,7 @@ namespace DungeonExplorer
             return RoomDescriptions[rand.Next(RoomDescriptions.Count)];
         }
 
-        // Method to get a random item.
-        public string GetItems()
-        {
-            return Items[rand.Next(Items.Count)];
-        }
+
 
 
     }
