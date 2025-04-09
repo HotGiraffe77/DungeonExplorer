@@ -28,18 +28,36 @@ namespace DungeonExplorer
 
 
         // Method to Show the contents of the inventory.
-        public string InventoryContents()
+        public void InventoryContents()
         {
             // Checks if the inventory is empty or not
             if (inventory.Count == 0)
             {
-                ShowInventory = ("Nothing :(");
+                Console.WriteLine("Nothing :(");
+                return;
             }
-            //else
-            //{
-                  
-            //}
-            return ShowInventory;
+
+            var grouped = inventory
+                    .GroupBy(item => item.GetType())
+                    .OrderBy(group => group.Key.Name);
+
+            foreach (var group in grouped)
+            {
+                Console.WriteLine($"{group.Key.Name}:");
+
+                if (!group.Any())
+                {
+                    Console.WriteLine("Nothing :(");
+                }
+                else
+                {
+                    foreach (var item in group)
+                    {
+                        Console.WriteLine($"- {item.Name}");
+                    }
+                }
+                Console.WriteLine();
+            }
         }
     }
 }

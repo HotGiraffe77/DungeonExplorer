@@ -130,9 +130,8 @@ namespace DungeonExplorer
                         else if (PickupInput == ConsoleKey.I)
                         {
                             // Displays the contents of the inventory. (calls InventoryContents())
-                            Console.WriteLine($"Your inventory currently has: {inventory.InventoryContents()}");
-                            Console.WriteLine($"Press Space to pick up {item.Name}, or Enter to enter the next room...");
-                            PickupInput = Console.ReadKey(true).Key;
+                            Console.WriteLine($"Your inventory currently has:");
+                            inventory.InventoryContents();
                         }
                         else if (PickupInput == ConsoleKey.M)
                         {
@@ -154,15 +153,18 @@ namespace DungeonExplorer
                 if (playing)
                 {
                     Console.WriteLine("\nYou made it through the dungeon! Thanks for playing." +
-                    $"\nIn the end you collected: {inventory.InventoryContents()}" +
-                    "\nPress any key to end the game...");
+                    $"\nIn the end you collected:");
+                    inventory.InventoryContents();
+                    Console.WriteLine("\nPress any key to end the game...");
+
 
                 }
                 else
                 {
-                    Console.WriteLine("Thanks for playing!"+
-                    $"\nIn the end you collected: {inventory.InventoryContents()}" +
-                    "\nPress any key to end the game...");
+                    Console.WriteLine("Thanks for playing!" +
+                    $"\nIn the end you collected:");
+                    inventory.InventoryContents();
+                    Console.WriteLine("\nPress any key to end the game...");
                 }
                 Console.ReadKey();
                 playing = false;
