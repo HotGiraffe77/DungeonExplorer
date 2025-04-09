@@ -15,7 +15,9 @@ namespace DungeonExplorer
         // Private sets.
         public Player player { get; private set; }
         public MonsterMaker monsterType { get; private set; }
+        public ItemMaker itemMaker { get; private set; }
         public Monster monster { get; private set; }
+        public Item item { get; private set; }
         public Room currentRoom { get; private set; }
         public Test testing = new Test();
         public GameMap map { get; private set; }
@@ -28,6 +30,7 @@ namespace DungeonExplorer
             map = new GameMap();
             inventory = new Inventory();
             monsterType = new MonsterMaker();
+            itemMaker = new ItemMaker();
 
         }
 
@@ -57,16 +60,26 @@ namespace DungeonExplorer
                 while (Key != ConsoleKey.Enter);
 
                 // The player has 6 turns to go through the dungeon.
-                player = new Player(username, 100, 15);
+                player = new Player(username, 1000, 15);
                 int TurnCount = 6;
                 while (TurnCount > 0)
                 {
-                    // Gets the description and item for the room.(Calls GetDescription() and GetItems())
                     string _room = currentRoom.GetDescription();
-                    string _item = currentRoom.GetItems();
+                    if (TurnCount == 5)
+                    {
+                        item = itemMaker.CreateWeapon(1);
+                    }
+                    else if (TurnCount == 3)
+                    {
+                        item = itemMaker.CreateWeapon(2);
+                    }
+                    else
+                    {
+                        item = itemMaker.CreateJunk();
+                    }
 
                     monster = monsterType.CreateMonster();
-                    map.SaveRoom(_room, _item);
+                    map.SaveRoom(_room, item.Name);
                     Console.WriteLine(_room);
                     Console.WriteLine($"In the room there is a {monster.Name} guarding a chest.");
                     monster.Speak();
@@ -91,7 +104,7 @@ namespace DungeonExplorer
                         Console.WriteLine("You defeated the monster.");
 
                     }
-                    Console.WriteLine($"The chest the monster was guarding contains a {_item}");
+                    Console.WriteLine($"The chest the monster was guarding contains a {item.Name}");
 
 
 
@@ -105,7 +118,11 @@ namespace DungeonExplorer
                         if (PickupInput == ConsoleKey.P)
                         {
                             // Adds the item to the inventory list. (Calls PickUpItem())
-                            inventory.PickUpItem(_item);
+                            inventory.PickUpItem(item);
+                            if (item is Weapon)
+                            {
+                                player.Damage = item.Damage;
+                            }
                             Console.WriteLine("Press any key to enter the next room...");
                             PickupInput = Console.ReadKey(true).Key;
                             condition = false;
@@ -114,12 +131,12 @@ namespace DungeonExplorer
                         {
                             // Displays the contents of the inventory. (calls InventoryContents())
                             Console.WriteLine($"Your inventory currently has: {inventory.InventoryContents()}");
-                            Console.WriteLine($"Press Space to pick up {_item}, or Enter to enter the next room...");
+                            Console.WriteLine($"Press Space to pick up {item.Name}, or Enter to enter the next room...");
                             PickupInput = Console.ReadKey(true).Key;
                         }
                         else if (PickupInput == ConsoleKey.M)
                         {
-                            _item = map.PrintRooms();
+                            item.Name = map.PrintRooms();
                             PickupInput = Console.ReadKey(true).Key;
                             
                         }

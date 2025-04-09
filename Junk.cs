@@ -16,10 +16,10 @@ namespace DungeonExplorer
         }
 
 
-        public override int Use()
+        public override int Use(int dmg)
         {
             Console.WriteLine("This item is junk and does nothing...");
-            return 0;
+            return dmg;
         }
 
     }

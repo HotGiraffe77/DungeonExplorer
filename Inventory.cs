@@ -8,10 +8,10 @@ namespace DungeonExplorer
 {
     public class Inventory
     {
-        public string NewItem { get; private set; }
+        public Item NewItem { get; private set; }
         public string ShowInventory { get; private set; }
-        // Fully private property.
-        private List<string> inventory = new List<string>();
+
+        private List<Item> inventory = new List<Item>();
 
         public Inventory()
         {
@@ -19,9 +19,9 @@ namespace DungeonExplorer
         }
 
         // Method to pick up the item in the current room.
-        public void PickUpItem(string item)
+        public void PickUpItem(Item item)
         {
-            Console.WriteLine($"{item} picked up!");
+            Console.WriteLine($"{item.Name} picked up!");
             NewItem = item;
             inventory.Add(NewItem);
         }
@@ -35,10 +35,10 @@ namespace DungeonExplorer
             {
                 ShowInventory = ("Nothing :(");
             }
-            else
-            {
-                ShowInventory = string.Join(", ", inventory);
-            }
+            //else
+            //{
+                  
+            //}
             return ShowInventory;
         }
     }

@@ -17,7 +17,7 @@ namespace DungeonExplorer
             Damage = damage;
         }
 
-        public abstract int Use();
+        public abstract int Use(int dmg);
 
     }
 }

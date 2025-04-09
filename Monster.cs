@@ -13,14 +13,13 @@ namespace DungeonExplorer
         public Monster(string name, int health, int damage)
             : base(name,health, damage)
         {
-
         }
 
         public override void Attack(Creature target)
         {
-            int damage = new Random().Next(1,Damage + 1);
-            Console.WriteLine($"{Name} attacks {target.Name} for {damage} damage. ");
-            target.Hit(damage);
+
+            Console.WriteLine($"{Name} attacks {target.Name} for {Damage} damage. ");
+            target.Hit(Damage);
         }
 
         public virtual void Speak()

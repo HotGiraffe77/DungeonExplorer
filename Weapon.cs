@@ -8,7 +8,16 @@ namespace DungeonExplorer
 {
     public class Weapon : Item
     {
+        public Weapon(string name, int damage)
+            : base(name, damage)
+        {
 
+        }
 
+        public override int Use(int dmg)
+        {
+            Console.WriteLine("This seems like a good weapon...");
+            return dmg;
+        }
     }
 }

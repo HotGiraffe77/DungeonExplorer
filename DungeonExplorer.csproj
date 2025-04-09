@@ -50,6 +50,7 @@
     <Compile Include="Goblin.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="ItemMaker.cs" />
     <Compile Include="Junk.cs" />
     <Compile Include="Monster.cs" />
     <Compile Include="MonsterMaker.cs" />
