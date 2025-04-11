@@ -14,10 +14,10 @@ namespace DungeonExplorer
 
         }
 
-        public override int Use(int dmg)
+        public override void Use()
         {
-            Console.WriteLine($"This seems like a good weapon, it will do {dmg} damage...");
-            return dmg;
+            Console.WriteLine($"This seems like a good weapon, it will damage monsters...");
+
         }
     }
 }

@@ -127,18 +127,55 @@ namespace DungeonExplorer
                             PickupInput = Console.ReadKey(true).Key;
                             condition = false;
                         }
+
                         else if (PickupInput == ConsoleKey.I)
                         {
                             // Displays the contents of the inventory. (calls InventoryContents())
                             Console.WriteLine($"Your inventory currently has:");
-                            inventory.InventoryContents();
+                            int getInv = inventory.InventoryContents();
+                            if (getInv == 0)
+                            {
+                                continue;
+                            }
+                            Console.WriteLine("Please type the name of the item you would like to select, or EXIT to go back...");
+                            string rawItemName = Console.ReadLine();
+                            string itemName = rawItemName.Replace(" ", "");
+                            if (itemName.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                Item foundItem = inventory.SelectItem(itemName);
+                                if (foundItem == null)
+                                {
+                                    Console.WriteLine("Could not find this item...");
+                                    continue;
+                                }
+                                Console.WriteLine($"You selected {foundItem.Name}. Would you like to use the item or remove it from your inventory ? (use / remove)");
+                                string input = Console.ReadLine().Trim();
+                                if (input.Equals("use", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    inventory.UseItem(foundItem);
+                                }
+                                else if(input.Equals("remove", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    inventory.RemoveItem(foundItem);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("That is not a valid command...");
+                                }
+                            }
                         }
+
                         else if (PickupInput == ConsoleKey.M)
                         {
                             item.Name = map.PrintRooms();
                             PickupInput = Console.ReadKey(true).Key;
                             
                         }
+
                         else if (PickupInput == ConsoleKey.E)
                         {
                             // Continues the game.

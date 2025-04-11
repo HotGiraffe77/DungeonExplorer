@@ -14,8 +14,8 @@ namespace DungeonExplorer
 
         public ItemMaker()
         {
-            junkNames = new List<string> { "Apple", "Rusted Sword", "Small Key", "Broken Jar", "Dice", "Damp Cloth" };
-            weaponNames = new List<string> { "Dagger", "Broad Sword", "Great Sword" };
+            junkNames = new List<string> { "Apple", "RustedSword", "SmallKey", "BrokenJar", "Dice", "DampCloth" };
+            weaponNames = new List<string> { "Dagger", "BroadSword", "GreatSword" };
         }
 
 

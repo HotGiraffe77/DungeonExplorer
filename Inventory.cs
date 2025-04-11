@@ -28,13 +28,13 @@ namespace DungeonExplorer
 
 
         // Method to Show the contents of the inventory.
-        public void InventoryContents()
+        public int InventoryContents()
         {
             // Checks if the inventory is empty or not
             if (inventory.Count == 0)
             {
                 Console.WriteLine("Nothing :(");
-                return;
+                return 0;
             }
 
             var grouped = inventory
@@ -58,6 +58,34 @@ namespace DungeonExplorer
                 }
                 Console.WriteLine();
             }
+            return 1;
+        }
+
+        public Item SelectItem(string itemName)
+        {
+            Item foundItem = inventory.FirstOrDefault(item => item.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+            if (foundItem != null)
+            {
+                return foundItem;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+        public void UseItem(Item item)
+        {
+            item.Use();
+            return;
+        }
+
+        public void RemoveItem(Item item)
+        {
+            inventory.Remove(item);
+            Console.WriteLine($"{item.Name} has been dropped.");
+            return;
         }
     }
 }
