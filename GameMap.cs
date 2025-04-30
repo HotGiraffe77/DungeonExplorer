@@ -8,52 +8,90 @@ namespace DungeonExplorer
 {
     internal class GameMap
     {
-        private List<List<string>> SavedRooms;
+        private Dictionary<(int, int), Room> rooms = new Dictionary<(int, int), Room>();
 
+
+        private (int x, int y) playerPosition = (0, 0);
+
+        private ItemMaker itemMaker = new ItemMaker();
+        private MonsterMaker monsterMaker = new MonsterMaker();
 
         public GameMap()
         {
-            SavedRooms = new List<List<string>>();
+            var startingRoom = GenerateRoom();
+            rooms[playerPosition] = startingRoom;
         }
 
-        public void SaveRoom(string desc, string item)
+        public Room GetCurrentRoom()
         {
-            SavedRooms.Add(new List<string> {desc,item});
-
+            return rooms[playerPosition];
         }
 
-        public string PrintRooms()
+        public Room Move(string direction)
         {
-            Console.WriteLine($"You have visited {SavedRooms.Count()} rooms.");
-            if (SavedRooms.Count() >1)
+            int dx = 0, dy = 0;
+            direction = direction.ToLower();
+
+            if (direction == "north") dy = 1;
+            else if (direction == "south") dy = -1;
+            else if (direction == "east") dx = 1;
+            else if (direction == "west") dx = -1;
+            else throw new ArgumentException("Invalid direction");
+
+            var newPos = (playerPosition.x + dx, playerPosition.y + dy);
+
+            if (!rooms.ContainsKey(newPos))
             {
-                while (true)
+                var newRoom = GenerateRoom();
+                rooms[newPos] = newRoom;
+                rooms[playerPosition].Connect(direction, newRoom);
+            }
+
+            playerPosition = newPos;
+            return rooms[playerPosition];
+        }
+
+
+        private Room GenerateRoom()
+        {
+            Random rand = new Random();
+            int randItem = rand.Next(0, 3);
+            if (randItem == 0 || randItem == 1)
+            {
+                var items = new List<Item>
                 {
-                    Console.WriteLine("Would you like to go back to the previous room?");
-                    string input = Console.ReadLine().Trim();
-                    if (input.Equals("Y", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var row = SavedRooms[SavedRooms.Count() - 2];
-                        var room = row[row.Count() - 2];
-                        var item = row[row.Count() - 1];
-                        Console.WriteLine(room);
-                        Console.WriteLine($"In the room there chest containing a {item}");
-                        return item;
-                    }
-                    else if (input.Equals("N", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return null;
-                    }
+                    itemMaker.CreateJunk()
+                };
+
+                if (rand.NextDouble() < 0.5)
+                {
+                    items.Add(itemMaker.CreateJunk());
                 }
+
+                var monster = monsterMaker.CreateMonster();
+                return new Room(items, monster);
             }
             else
             {
-                return null;
+                randItem = rand.Next(0, 3);
+                var items = new List<Item>
+                {
+                    itemMaker.CreateWeapon(randItem)
+                };
+
+                if (rand.NextDouble() < 0.5)
+                {
+                    items.Add(itemMaker.CreateJunk());
+                }
+                var monster = monsterMaker.CreateMonster();
+                return new Room(items, monster);
             }
+        }
 
-
-            
-            
+        public int PrintVisitedMap()
+        {
+            Console.WriteLine($"You have visited {rooms.Count} rooms so far.");
+            return rooms.Count;
         }
     }
 }

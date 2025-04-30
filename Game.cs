@@ -13,7 +13,7 @@ namespace DungeonExplorer
     internal class Game
     {
         // Private sets.
-        public Player player { get; private set; }
+        public Player player { get;  set; }
         public MonsterMaker monsterType { get; private set; }
         public ItemMaker itemMaker { get; private set; }
         public Monster monster { get; private set; }
@@ -22,6 +22,7 @@ namespace DungeonExplorer
         public Test testing = new Test();
         public GameMap map { get; private set; }
         public Inventory inventory { get; private set; }
+        public Statistics stats { get; private set; }
         public string Username { get; private set; }
 
         public Game()
@@ -31,181 +32,233 @@ namespace DungeonExplorer
             inventory = new Inventory();
             monsterType = new MonsterMaker();
             itemMaker = new ItemMaker();
+            stats = new Statistics();
 
         }
 
         // Method to start the main game loop.
         public void Start()
         {
+            testing.RunTests();
 
             bool playing = true;
-            while (playing)
+
+            Console.WriteLine("Please enter a username: ");
+            Username = Console.ReadLine();
+            if (string.IsNullOrEmpty(Username))
             {
-                testing.RunTests();
-                // Gets the users name.(Calls GetName())
-                Console.WriteLine("Please enter a username: ");
-                string username = Console.ReadLine();
-                if (string.IsNullOrEmpty(username))
-                {
-                    username = "Blank";
-                }
-                Console.WriteLine($"Hello, {username}!");
+                Username = "Blank";
+            }
 
-                ConsoleKey Key;
-                do
-                {
-                    Console.WriteLine("Press Enter to start the game...");
-                    Key = Console.ReadKey(true).Key;
-                }
-                while (Key != ConsoleKey.Enter);
+            Console.WriteLine($"Hello, {Username}!");
+            Console.WriteLine("Press Enter to start the game...");
+            while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
 
-                // The player has 6 turns to go through the dungeon.
-                player = new Player(username, 1000, 15);
-                int TurnCount = 6;
-                while (TurnCount > 0)
-                {
-                    string _room = currentRoom.GetDescription();
-                    if (TurnCount == 5)
-                    {
-                        item = itemMaker.CreateWeapon(1);
-                    }
-                    else if (TurnCount == 3)
-                    {
-                        item = itemMaker.CreateWeapon(2);
-                    }
-                    else
-                    {
-                        item = itemMaker.CreateJunk();
-                    }
+            player = new Player(Username, 1000, 15);
+            currentRoom = map.GetCurrentRoom();
 
-                    monster = monsterType.CreateMonster();
-                    map.SaveRoom(_room, item.Name);
-                    Console.WriteLine(_room);
-                    Console.WriteLine($"In the room there is a {monster.Name} guarding a chest.");
-                    monster.Speak();
-                    while (monster.IsAlive && player.IsAlive)
+            while (playing && player.IsAlive)
+            {
+                currentRoom = map.GetCurrentRoom();
+                Console.WriteLine("\n-------------------");
+                if (!currentRoom.Visited)
+                {
+                    Console.WriteLine(currentRoom.GetSummary());
+                    currentRoom.Visited = true;
+
+                    if (currentRoom.Monster != null && currentRoom.Monster.IsAlive)
                     {
-                        Console.WriteLine($"Press any key to attack the {monster.Name}.");
-                        Console.ReadKey();
-                        player.Attack(monster);
-                        if (monster.IsAlive)
+                        currentRoom.Monster.Speak();
+
+                        while (currentRoom.Monster.IsAlive && player.IsAlive)
                         {
-                            monster.Attack(player);
+                            Console.WriteLine("Press any key to attack...");
+                            Console.ReadKey(true);
+                            player.Attack(currentRoom.Monster);
+                            if (currentRoom.Monster.IsAlive)
+                                currentRoom.Monster.Attack(player);
                         }
-                    }
-                    if (!player.IsAlive)
-                    {
-                        Console.WriteLine("You were defeated...");
-                        playing = false;
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("You defeated the monster.");
 
-                    }
-                    Console.WriteLine($"The chest the monster was guarding contains a {item.Name}");
-
-
-
-                    bool condition = true;
-                    while (condition == true)
-                    {
-                        Console.WriteLine(" Press P to pick it up, I to check your inventory, M to check your map, or E to enter the next room...");
-                        ConsoleKey PickupInput;
-                        PickupInput = Console.ReadKey(true).Key;
-
-                        if (PickupInput == ConsoleKey.P)
+                        if (!player.IsAlive)
                         {
-                            // Adds the item to the inventory list. (Calls PickUpItem())
-                            inventory.PickUpItem(item);
-                            if (item is Weapon)
+                            Console.WriteLine("You were defeated...");
+                            playing = false;
+                            break;
+                        }
+
+                        Console.WriteLine($"You defeated the {currentRoom.Monster.Name}!");
+                        stats.countKills();
+                    }
+
+                    if (currentRoom.Items.Count > 0)
+                    {
+                        Console.WriteLine("You walk over to the chest containing: ");
+                        foreach (var item in currentRoom.Items)
+                        {
+                            Console.WriteLine($"- {item.Name}");
+                        }
+
+
+
+                        Console.WriteLine("Press P to pick it up, I to open inventory, M to show map, or any other key to continue...");
+                        ConsoleKey PickUpInput = Console.ReadKey(true).Key;
+
+                        if (PickUpInput == ConsoleKey.P)
+                        {
+                            foreach (var item in currentRoom.Items)
                             {
-                                player.Damage = item.Damage;
+                                inventory.PickUpItem(item);
+                                if (item is Weapon)
+                                    player.Damage = item.Damage;
                             }
-                            Console.WriteLine("Press any key to enter the next room...");
-                            PickupInput = Console.ReadKey(true).Key;
-                            condition = false;
-                        }
+                            currentRoom.Items.Clear();
+                            stats.countItems();
 
-                        else if (PickupInput == ConsoleKey.I)
+                        }
+                        else if (PickUpInput == ConsoleKey.I)
                         {
-                            // Displays the contents of the inventory. (calls InventoryContents())
                             Console.WriteLine($"Your inventory currently has:");
                             int getInv = inventory.InventoryContents();
-                            if (getInv == 0)
+                            if (getInv == 1)
                             {
-                                continue;
-                            }
-                            Console.WriteLine("Please type the name of the item you would like to select, or EXIT to go back...");
-                            string rawItemName = Console.ReadLine();
-                            string itemName = rawItemName.Replace(" ", "");
-                            if (itemName.Equals("exit", StringComparison.OrdinalIgnoreCase))
-                            {
-                                continue;
-                            }
-                            else
-                            {
+                                Console.WriteLine("Please type the name of the item you would like to select...");
+                                string rawItemName = Console.ReadLine();
+                                string itemName = rawItemName.Replace(" ", "");
+
                                 Item foundItem = inventory.SelectItem(itemName);
+
                                 if (foundItem == null)
                                 {
-                                    Console.WriteLine("Could not find this item...");
-                                    continue;
-                                }
-                                Console.WriteLine($"You selected {foundItem.Name}. Would you like to use the item or remove it from your inventory ? (use / remove)");
-                                string input = Console.ReadLine().Trim();
-                                if (input.Equals("use", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    inventory.UseItem(foundItem);
-                                }
-                                else if(input.Equals("remove", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    inventory.RemoveItem(foundItem);
+                                    Console.WriteLine("Item not found in inventory.");
                                 }
                                 else
                                 {
-                                    Console.WriteLine("That is not a valid command...");
+                                    Console.WriteLine($"You selected {foundItem.Name}. Would you like to use the item or remove it from your inventory ? (use / remove)");
+                                    string input = Console.ReadLine().Trim();
+
+
+                                    if (input.Equals("use", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        inventory.UseItem(foundItem);
+                                        if (foundItem is Weapon)
+                                        {
+                                            player.Damage = foundItem.Damage;
+
+                                        }
+                                    }
+                                    else if (input.Equals("remove", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        inventory.RemoveItem(foundItem);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("That is not a valid command...");
+                                    }
                                 }
                             }
-                        }
-
-                        else if (PickupInput == ConsoleKey.M)
-                        {
-                            item.Name = map.PrintRooms();
-                            PickupInput = Console.ReadKey(true).Key;
+                            
                             
                         }
-
-                        else if (PickupInput == ConsoleKey.E)
+                        else if (PickUpInput == ConsoleKey.M)
                         {
-                            // Continues the game.
-                            condition = false;
+                            map.PrintVisitedMap();
+                        }
+
+
+                    }
+
+                    string direction;
+                    while (true)
+                    {
+                        Console.WriteLine("Which direction would you like to go? (north/south/east/west) or Q to quit");
+                        direction = Console.ReadLine().Trim().ToLower();
+                        if (direction == "north" || direction == "south" || direction == "east" || direction == "west")
+                        {
+                            break;
+                        }
+                        else if (direction == "q")
+                        {
+                            break;
                         }
                     }
-                    TurnCount -= 1;
-
-                }
-
-                // Displays the inventory before ending the game.
-                if (playing)
-                {
-                    Console.WriteLine("\nYou made it through the dungeon! Thanks for playing." +
-                    $"\nIn the end you collected:");
-                    inventory.InventoryContents();
-                    Console.WriteLine("\nPress any key to end the game...");
-
+                    if (direction == "q")
+                    {
+                        playing = false;
+                        break;
+                    }
+                    try
+                    {
+                        currentRoom = map.Move(direction);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Invalid PickUpInput: {ex.Message}");
+                    }
+                    stats.countRooms();
 
                 }
                 else
                 {
-                    Console.WriteLine("Thanks for playing!" +
-                    $"\nIn the end you collected:");
-                    inventory.InventoryContents();
-                    Console.WriteLine("\nPress any key to end the game...");
+                    Console.WriteLine("You've returned to a familiar room:");
+                    Console.WriteLine(currentRoom.Description);
+                    Console.WriteLine($"Exits: {string.Join(", ", currentRoom.Exits.Keys)}");
+
+                    Console.WriteLine("Which direction would you like to go? (north/south/east/west) or Q to quit:");
+                    string revisitDirection = Console.ReadLine().Trim().ToLower();
+
+                    while (true)
+                    {
+                        Console.WriteLine("Which direction would you like to go? (north/south/east/west) or Q to quit");
+                        revisitDirection = Console.ReadLine().Trim().ToLower();
+                        if (revisitDirection == "north" || revisitDirection == "south" || revisitDirection == "east" || revisitDirection == "west")
+                        {
+                            break;
+                        }
+                        else if (revisitDirection == "q")
+                        {
+                            break;
+                        }
+                    }
+                    if (revisitDirection == "q")
+                    {
+                        playing = false;
+                        break;
+                    }
+                    try
+                    {
+                        currentRoom = map.Move(revisitDirection);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Invalid PickUpInput: {ex.Message}");
+                    }
+
+                    // Skip rest of the loop and re-enter with new currentRoom
+                    continue;
                 }
-                Console.ReadKey();
-                playing = false;
+
             }
+            // Displays the inventory before ending the game.
+            if (playing)
+            {
+                Console.WriteLine("\nYou made it through the dungeon! Thanks for playing." +
+                $"\nIn the end you collected:");
+                inventory.InventoryContents();
+                stats.conclusion();
+                Console.WriteLine("\nPress any key to end the game...");
+
+
+            }
+            else
+            {
+                Console.WriteLine("Thanks for playing!" +
+                $"\nIn the end you collected:");
+                inventory.InventoryContents();
+                stats.conclusion();
+                Console.WriteLine("\nPress any key to end the game...");
+            }
+            Console.ReadKey();
+            playing = false;
         }
     }
 }

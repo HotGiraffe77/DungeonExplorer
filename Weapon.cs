@@ -17,7 +17,7 @@ namespace DungeonExplorer
         public override void Use()
         {
             Console.WriteLine($"This seems like a good weapon, it will damage monsters...");
-
+            Console.WriteLine("Weapon equipped...");
         }
     }
 }

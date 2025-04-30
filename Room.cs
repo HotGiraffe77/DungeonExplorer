@@ -11,15 +11,10 @@ namespace DungeonExplorer
     /// </summary>
     public class Room
     {
-        private List<string> RoomDescriptions;
-        private Random rand;
 
 
-        // Constructor initialises with room descriptions, items, and random.
-        public Room()
-        {
-            // List of room descriptions.
-            RoomDescriptions = new List<string> {
+        // List of room descriptions.
+        private static List<string> RoomDescriptions = new List<string> {
             "\nRows of rusted chains hang from the ceiling, the walls lined with crude iron shackles. In the center of the room stands, a single, bloodstained alter.",
             "\nA damp, musty odor lingers in this ancient burial chamber. Cracked sarcophagi line the walls. The air is unnervingly still.",
             "\nTowering bookshelves, coated in centuries of dust. Ancient tomes and scrolls lay scattered on the floor. A thick fog clings to the ground.",
@@ -27,27 +22,72 @@ namespace DungeonExplorer
             "\nThe floor squelches with every step as thick slime coats the stone floors. Occasional bubbles rise and pop. The walls ooze with the same sticky substance",
             "\nThis vast, domed chamber seems unnaturally large. Shadows flicker abnormally. In the center of the room, a pedestal holds a cracked hourglass" };
 
-            
-            rand = new Random();
+        private static Random rand = new Random();
 
-        }
 
-        // Getter and setter for the room description list.
-        public List<string> RoomDescriptionList
+        public string Description { get; private set; }
+        public List<Item> Items { get; private set; }
+        public Monster Monster { get; set; }
+        public bool Visited { get; set; }
+        public Dictionary<string, Room> Exits { get; private set; }
+
+
+        public Room(List<Item> items = null, Monster monster = null)
         {
-            get { return RoomDescriptions; }
-            private set { RoomDescriptions = value; }
+            Description = RoomDescriptions[rand.Next(RoomDescriptions.Count)];
+            Items = items ?? new List<Item>();
+            Monster = monster;
+            Visited = false;
+            Exits = new Dictionary<string, Room>();
         }
 
-        // Method to get a random room descriptions.
-        public string GetDescription()
+        public void Connect(string direction, Room otherRoom)
         {
-
-            return RoomDescriptions[rand.Next(RoomDescriptions.Count)];
+            Exits[direction] = otherRoom;
+            string opposite = GetOppositeDirection(direction);
+            if (!otherRoom.Exits.ContainsKey(opposite))
+            {
+                otherRoom.Exits[opposite] = this;
+            }
         }
 
+        private string GetOppositeDirection(string direction)
+        {
+            direction = direction.ToLower();
 
+            if (direction == "north") return "south";
+            if (direction == "south") return "north";
+            if (direction == "east") return "west";
+            if (direction == "west") return "east";
 
+            throw new ArgumentException("Invalid direction");
+        }
 
+        public string GetSummary()
+        {
+            string summary = $"{Description}\n";
+
+            if (Monster != null && Monster.IsAlive)
+            {
+                summary += $"A {Monster.Name} lurks here...\n";
+            }
+
+            if (Items.Count > 0)
+            {
+                summary += "A chest lies in the corner. It contains:\n";
+                foreach (var item in Items)
+                {
+                    summary += $"- {item.Name}\n";
+                }
+            }
+
+            summary += $"Exits: {string.Join(", ", Exits.Keys)}";
+            return summary;
+        }
     }
 }
+
+
+
+
+
