@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DungeonExplorer
 {
+    // Class used to pick a random Monster subclass.
     internal class MonsterMaker
     {
         private Random random = new Random();

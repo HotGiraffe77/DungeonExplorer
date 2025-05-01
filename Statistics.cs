@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DungeonExplorer
 {
+    // Class for tracking the statistics of the game.
     internal class Statistics
     {
         private int kills { get; set; }
@@ -16,6 +17,7 @@ namespace DungeonExplorer
 
         }
 
+        // Methods that increment values to track different aspects of the game.
         public void countKills()
         {
             kills += 1;
@@ -28,6 +30,8 @@ namespace DungeonExplorer
         {
             rooms += 1;
         }
+
+        // Outputs all of the collected data.
         public void conclusion()
         {
             Console.WriteLine($"You have killed {kills} monsters," +

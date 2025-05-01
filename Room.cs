@@ -5,10 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace DungeonExplorer
 {
-    /// <summary>
-    /// Creates the rooms that the user will be moving through.
-    /// The class has methods for getting random items and descriptions.
-    /// </summary>
+    // Rooms have descriptions, items and a monster. It also has a flag that tracks whether it has been visited or not.
     public class Room
     {
 
@@ -29,9 +26,11 @@ namespace DungeonExplorer
         public List<Item> Items { get; private set; }
         public Monster Monster { get; set; }
         public bool Visited { get; set; }
+        // Dictionary that maps directions to different rooms.
         public Dictionary<string, Room> Exits { get; private set; }
 
 
+        // Constructs a new room with a random description, items, and a monster.
         public Room(List<Item> items = null, Monster monster = null)
         {
             Description = RoomDescriptions[rand.Next(RoomDescriptions.Count)];
@@ -41,6 +40,8 @@ namespace DungeonExplorer
             Exits = new Dictionary<string, Room>();
         }
 
+
+        // Method to connect two rooms in a specific direction. Adds the opposite direction to the other room.
         public void Connect(string direction, Room otherRoom)
         {
             Exits[direction] = otherRoom;
@@ -51,6 +52,7 @@ namespace DungeonExplorer
             }
         }
 
+        // Returns the opposite direction of the given direction.
         private string GetOppositeDirection(string direction)
         {
             direction = direction.ToLower();
@@ -63,6 +65,7 @@ namespace DungeonExplorer
             throw new ArgumentException("Invalid direction");
         }
 
+        // Generates an output for the summary of the room. Outputs a description of the room, the list of items in it and the monster.
         public string GetSummary()
         {
             string summary = $"{Description}\n";

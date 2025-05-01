@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace DungeonExplorer
 {
+
+    // Generates an Item. Either junk, or a weapon.
     internal class ItemMaker
     {
         private Random rand = new Random();
         private List<string> junkNames;
         private List<string> weaponNames;
 
+        // Lists of names for the different item types.
         public ItemMaker()
         {
             junkNames = new List<string> { "Apple", "RustedSword", "SmallKey", "BrokenJar", "Dice", "DampCloth" };
@@ -19,12 +22,14 @@ namespace DungeonExplorer
         }
 
 
+        // Picks a random junk name and gives it 0 damage.
         public Item CreateJunk()
         {
             string itemType = junkNames[rand.Next(junkNames.Count())];
             return new Junk(itemType, 0);
         }
 
+        // The method takes a number and generates the weapon accordingly.
         public Item CreateWeapon(int weaponChoice)
         {
             switch (weaponChoice)

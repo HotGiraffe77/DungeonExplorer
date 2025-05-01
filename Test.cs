@@ -5,10 +5,7 @@ using System.Security.Policy;
 
 namespace DungeonExplorer
 {
-    /// <summary>
-    /// Tests various aspects of the program
-    /// Contains a method that uses debug.assert() to run tests.
-    /// </summary>
+
     internal class Test
     {
         // Contains the tests that are run at the start of the program.
@@ -24,6 +21,7 @@ namespace DungeonExplorer
         }
 
 
+        // Tests player values are corrrect.
         private void TestPlayer()
         {
             Player testplayer = new Player("Test", 100, 15);
@@ -35,6 +33,7 @@ namespace DungeonExplorer
             Trace.WriteLine("Player methods tested successfully...");
         }
 
+        // Tests the combat between the player and a monster.
         private void TestCombat()
         {
             Player testplayer2 = new Player("Test", 100, 15);
@@ -56,6 +55,8 @@ namespace DungeonExplorer
 
         }
 
+
+        // Tests the game flow by simulating a player moving through rooms and interacting with them.
         private void TestGameFlow()
         {
             Console.WriteLine("Running integration test with Game class...");
@@ -81,8 +82,6 @@ namespace DungeonExplorer
             room1.Visited = true;
             room1.Monster = null;
             room1.Items.Clear();
-
-            // Call Game logic method manually if you create utility functions later
 
             Console.WriteLine("Integration test completed.");
         }

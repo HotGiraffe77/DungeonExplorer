@@ -6,13 +6,10 @@ using System.Media;
 
 namespace DungeonExplorer
 {
-    /// <summary>
-    /// Contains all the logic for the game to run.
-    /// This class has a method with the main game loop inside.
-    /// </summary>
+    // Contains all the logic for the game to run.
     internal class Game
     {
-        // Private sets.
+        // Core components of the game.
         public Player player { get;  set; }
         public MonsterMaker monsterType { get; private set; }
         public ItemMaker itemMaker { get; private set; }
@@ -25,6 +22,7 @@ namespace DungeonExplorer
         public Statistics stats { get; private set; }
         public string Username { get; private set; }
 
+        // Constructor to initialize the game components.
         public Game()
         {
             currentRoom = new Room();
@@ -43,6 +41,7 @@ namespace DungeonExplorer
 
             bool playing = true;
 
+            // Prompts the user for their name and sets a default if none is provided.
             Console.WriteLine("Please enter a username: ");
             Username = Console.ReadLine();
             if (string.IsNullOrEmpty(Username))
@@ -53,23 +52,30 @@ namespace DungeonExplorer
             Console.WriteLine($"Hello, {Username}!");
             Console.WriteLine("Press Enter to start the game...");
             while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
-
-            player = new Player(Username, 1000, 15);
+            
+            // Initialises the player and starting room.
+            player = new Player(Username, 250, 15);
             currentRoom = map.GetCurrentRoom();
 
+
+            // Main game loop.
             while (playing && player.IsAlive)
             {
                 currentRoom = map.GetCurrentRoom();
                 Console.WriteLine("\n-------------------");
+
+                // First time visiting a room.
                 if (!currentRoom.Visited)
                 {
                     Console.WriteLine(currentRoom.GetSummary());
                     currentRoom.Visited = true;
 
+                    // Monster encounter.
                     if (currentRoom.Monster != null && currentRoom.Monster.IsAlive)
                     {
                         currentRoom.Monster.Speak();
 
+                        // Main combat loop.
                         while (currentRoom.Monster.IsAlive && player.IsAlive)
                         {
                             Console.WriteLine("Press any key to attack...");
@@ -90,8 +96,10 @@ namespace DungeonExplorer
                         stats.countKills();
                     }
 
+                    // Item pickup interaction.
                     if (currentRoom.Items.Count > 0)
                     {
+                        // Lists the item/s in a room.
                         Console.WriteLine("You walk over to the chest containing: ");
                         foreach (var item in currentRoom.Items)
                         {
@@ -103,6 +111,7 @@ namespace DungeonExplorer
                         Console.WriteLine("Press P to pick it up, I to open inventory, M to show map, or any other key to continue...");
                         ConsoleKey PickUpInput = Console.ReadKey(true).Key;
 
+                        // P picks up the item and adds it to the inventory.
                         if (PickUpInput == ConsoleKey.P)
                         {
                             foreach (var item in currentRoom.Items)
@@ -115,10 +124,14 @@ namespace DungeonExplorer
                             stats.countItems();
 
                         }
+
+                        // I opens the inventory and allows the player to use or remove an item.
                         else if (PickUpInput == ConsoleKey.I)
                         {
+                            // Lists the items in the inventory.
                             Console.WriteLine($"Your inventory currently has:");
                             int getInv = inventory.InventoryContents();
+                            // If the inventory has items in it allows selection.
                             if (getInv == 1)
                             {
                                 Console.WriteLine("Please type the name of the item you would like to select...");
@@ -133,6 +146,7 @@ namespace DungeonExplorer
                                 }
                                 else
                                 {
+                                    // Prompts user to use or remove the item.
                                     Console.WriteLine($"You selected {foundItem.Name}. Would you like to use the item or remove it from your inventory ? (use / remove)");
                                     string input = Console.ReadLine().Trim();
 
@@ -159,6 +173,7 @@ namespace DungeonExplorer
                             
                             
                         }
+                        // Prints the number of vistied rooms.
                         else if (PickUpInput == ConsoleKey.M)
                         {
                             map.PrintVisitedMap();
@@ -167,6 +182,7 @@ namespace DungeonExplorer
 
                     }
 
+                    // If the player chooses to continue, they are prompted for a direction.
                     string direction;
                     while (true)
                     {
@@ -197,12 +213,15 @@ namespace DungeonExplorer
                     stats.countRooms();
 
                 }
+                // If the player has already visited the room, they are given a summary of the room.
                 else
                 {
+                    // Summary of the room.
                     Console.WriteLine("You've returned to a familiar room:");
                     Console.WriteLine(currentRoom.Description);
                     Console.WriteLine($"Exits: {string.Join(", ", currentRoom.Exits.Keys)}");
 
+                    // Prompts the user for a direction to go.
                     Console.WriteLine("Which direction would you like to go? (north/south/east/west) or Q to quit:");
                     string revisitDirection = Console.ReadLine().Trim().ToLower();
 

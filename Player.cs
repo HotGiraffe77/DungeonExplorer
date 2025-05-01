@@ -5,23 +5,22 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace DungeonExplorer
 {
-    ///<summary>
-    /// Creates the player that representst he user
-    /// The player class has methods for inventory intercation and username aquisition
-    /// </summary>
-
+    // Player class inherits from creature.
     public class Player : Creature
     {
-        // Constructor initialises the players name and health.
+        // Constructor gets the players name, health, and damage then passes them to the creature class.
         public Player(string name, int health, int damage)
             : base(name, health, damage) { }
 
 
+        // Overides attack method from the creature class.
         public override void Attack(Creature target)
         {
             int dmg = Damage;
             Console.WriteLine($"You attack {target.Name} for {dmg} damage. ");
             target.Hit(dmg);
         }
+
+        // No interface as the player doesnt make sound.
     }
 }
