@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace DungeonExplorer
 {
-    /// <summary>
-    /// Enables the game loop to run.
-    /// </summary>
+    // starts the main game loop
     internal class Program
     {
         static void Main(string[] args)
